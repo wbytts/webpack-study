@@ -95,7 +95,15 @@ module.exports = {
       // 处理 stylus资源
       {
         test: /\.styl$/,
-        loader: 'stylus-loader', // 将 Stylus 文件编译为 CSS
+        use: [
+          // 将 JS 字符串生成为 style 节点
+          // 'style-loader',
+          MiniCssExtractPluginLoader,
+          // 将 CSS 转化成 CommonJS 模块
+          'css-loader',
+          // 将 Stylus 文件编译为 CSS
+          'stylus-loader',
+        ],
       },
     ],
   },

@@ -3,10 +3,11 @@ const path = require('path');
 // npm install --save-dev style-loader
 // npm install --save-dev css-loader
 // npm install less less-loader --save-dev
-// npm install sass-loader sass webpack --save-dev
+// npm install sass sass-loader webpack --save-dev
 // npm install stylus stylus-loader --save-dev
 
 module.exports = {
+  mode: 'development',
   // 入口
   entry: './src/index.js',
   // 输出
@@ -78,7 +79,14 @@ module.exports = {
       // 处理 stylus资源
       {
         test: /\.styl$/,
-        loader: 'stylus-loader', // 将 Stylus 文件编译为 CSS
+        use: [
+          // 将 JS 字符串生成为 style 节点
+          'style-loader',
+          // 将 CSS 转化成 CommonJS 模块
+          'css-loader',
+          // 将 Stylus 文件编译为 CSS
+          'stylus-loader',
+        ],
       },
     ],
   },

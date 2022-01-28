@@ -13,6 +13,7 @@ const path = require('path');
     2. 用 MiniCssExtractPlugin.loader 替换 style-loader
 */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const MiniCssExtractPluginLoader = {
   loader: MiniCssExtractPlugin.loader,
   options: {
@@ -21,6 +22,7 @@ const MiniCssExtractPluginLoader = {
 };
 
 module.exports = {
+  mode: 'development',
   // 入口
   entry: './src/index.js',
   // 输出
@@ -88,7 +90,15 @@ module.exports = {
       // 处理 stylus资源
       {
         test: /\.styl$/,
-        loader: 'stylus-loader', // 将 Stylus 文件编译为 CSS
+        use: [
+          // 将 JS 字符串生成为 style 节点
+          // 'style-loader',
+          MiniCssExtractPluginLoader,
+          // 将 CSS 转化成 CommonJS 模块
+          'css-loader',
+          // 将 Stylus 文件编译为 CSS
+          'stylus-loader',
+        ],
       },
     ],
   },
@@ -98,8 +108,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       // 类似于 webpackOptions.output 中的选项
       // 所有选项都是可选的
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
+      ignoreOrder: false, // Enable to remove warnings about conflicting order
     }),
   ],
 };
